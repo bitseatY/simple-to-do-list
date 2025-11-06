@@ -9,10 +9,11 @@ import java.util.List;
 public class Task {
     private  String taskContent;
     private   LocalDateTime dueTime;
-
-    public  enum State{PENDING, inPROGRESS,COMPLETED,OVERDUE,ARCHIVED}
+    public  enum State{PENDING, inPROGRESS,COMPLETED,OVERDUE}
     private State state;
-    private  List<Task> subTasks;
+    private    List<Task> subTasks;
+    private Task lastSubTask;
+
 
     public Task(String taskContent,LocalDateTime dueTime){
         this.dueTime =dueTime;
@@ -20,6 +21,14 @@ public class Task {
         state=State.PENDING;
 
     }
+    public  boolean hasSubtasks(){
+        return subTasks!=null;
+    }
+
+    public Task getLastSubTask() {
+        return lastSubTask;
+    }
+
     public Iterator<Task> getSubTasks(){
         if(subTasks==null||subTasks.isEmpty()){
             return null;
@@ -27,12 +36,14 @@ public class Task {
         return  subTasks.iterator();
     }
 
+
     public void addSubTask(Task task){
         if(subTasks==null){
              subTasks=new ArrayList<>();
         }
-        subTasks.add(task);
-        subTasks.sort(Comparator.comparing(Task::getDueTime));
+        lastSubTask=task;
+        subTasks.add(lastSubTask);
+        Mode.sort(subTasks);
     }
 
     public void  removeSubTask(Task subTask){
