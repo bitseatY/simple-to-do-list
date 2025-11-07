@@ -1,6 +1,6 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
+
 import java.util.List;
 
 public class SequentialToDoList implements  Mode {
@@ -21,7 +21,7 @@ public class SequentialToDoList implements  Mode {
              }
           }
           if(task.hasSubtasks()){
-              if(task.getLastSubTask().getState()!= Task.State.COMPLETED){
+              if(task.getSubTasks().getLast().getState()!= Task.State.COMPLETED){
                   System.out.println("last subtask must be completed to cross off task.");
                   return;
               }
@@ -36,8 +36,5 @@ public class SequentialToDoList implements  Mode {
         Mode.sort(toDoList);
     }
 
-    @Override
-    public void removeTask(Task task) {
-         toDoList.remove(task);
-    }
-}
+
+   }

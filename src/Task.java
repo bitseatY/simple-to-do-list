@@ -1,18 +1,64 @@
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
+
 import java.util.List;
 
 
-public class Task {
+public class Task  {
     private  String taskContent;
     private   LocalDateTime dueTime;
-    public  enum State{PENDING, inPROGRESS,COMPLETED,OVERDUE}
+    public  enum State{PENDING, inPROGRESS,COMPLETED,OVERDUE,DELETED}
     private State state;
     private    List<Task> subTasks;
-    private Task lastSubTask;
+
+
+    public static class Memento{
+        private final String taskContent;
+        private final   LocalDateTime dueTime;
+        private  final   State state;
+        private final    List<Memento> subTaskMementos;
+        //private Task lastSubTask;
+        public Memento(String taskContent,LocalDateTime dueTime,State state,List<Memento> subTaskMementos){
+            this.dueTime=dueTime;
+            this.taskContent=taskContent;
+            this.state=state;
+            this.subTaskMementos=subTaskMementos;
+
+        }
+
+    }
+
+   public Memento saveState() {
+       List<Memento> subTaskMementos = new ArrayList<>();
+       if (this.subTasks != null) {
+           for (Task sub : this.subTasks) {                 //capture  task and all its subtasks
+               subTaskMementos.add(sub.saveState());
+           }
+       }
+       return new Memento(taskContent, dueTime, state, subTaskMementos);
+   }
+
+   public void  restore(Memento memento){
+        this.setTaskContent(memento.taskContent);                //restore state from top to bottom
+        this.setDueTime(memento.dueTime);
+        this.setState(memento.state);
+        this.subTasks.clear();
+        for(Memento m: memento.subTaskMementos){
+             Task subTask=new Task(m.taskContent,m.dueTime);
+             subTask.restore(m);
+             subTasks.add(subTask);
+        }
+
+
+
+
+   }
+
+
+
+
+
 
 
     public Task(String taskContent,LocalDateTime dueTime){
@@ -25,15 +71,11 @@ public class Task {
         return subTasks!=null;
     }
 
-    public Task getLastSubTask() {
-        return lastSubTask;
-    }
 
-    public Iterator<Task> getSubTasks(){
-        if(subTasks==null||subTasks.isEmpty()){
-            return null;
-        }
-        return  subTasks.iterator();
+
+    public List<Task> getSubTasks(){
+
+        return  subTasks;
     }
 
 
@@ -41,8 +83,8 @@ public class Task {
         if(subTasks==null){
              subTasks=new ArrayList<>();
         }
-        lastSubTask=task;
-        subTasks.add(lastSubTask);
+
+        subTasks.add(task);
         Mode.sort(subTasks);
     }
 
@@ -75,5 +117,11 @@ public class Task {
 
     public LocalDateTime getDueTime() {
         return dueTime;
+    }
+
+
+    @Override
+    public String toString() {
+        return taskContent;
     }
 }

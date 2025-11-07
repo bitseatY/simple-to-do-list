@@ -1,7 +1,7 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -40,16 +40,21 @@ public interface Mode {
         task.addSubTask(subTask);
         Mode.setTimer(subTask);
     }
-    default   void    removeSubTask(Task task,Task subTask){
-        task.removeSubTask(subTask);
+    default   void    removeSubTask(Task subTask){
+        subTask.setState(Task.State.DELETED);
     }
-
+    default void changeTaskContent(Task task, String newTaskContent){
+        task.setTaskContent(newTaskContent);
+    }
+   default void removeTask(Task task){
+        task.setState(Task.State.DELETED);
+   }
 
 
     void addTask(Task task);
 
     void checkOffTask(Task task);
-    void removeTask(Task task);
+
     void postPoneTask(Task task,LocalDateTime newDueTime);
 
 
