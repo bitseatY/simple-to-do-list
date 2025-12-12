@@ -7,27 +7,27 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Task {
-    @Id            //https://github.com/bitseatY/simple-to-do-list.git
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String task_Content;
-    private String state;
+    private String taskContent;
+    private String state="pending";
 
     public Task(){}
-    public Task(String task_Content){
-        this.task_Content= task_Content;
+    public Task(String taskContent){
+        this.taskContent= taskContent;
     }
     public int getId(){
         return id;
     }
     public String getTaskContent(){
-        return task_Content;
+        return taskContent;
     }
     public String getState(){
         return state;
     }
-    public void setTaskContent(String task_Content){
-        this.task_Content= this.task_Content;
+    public void setTaskContent(String taskContent){
+        this.taskContent= this.taskContent;
     }
     public void setState(String state){
         this.state=state;
